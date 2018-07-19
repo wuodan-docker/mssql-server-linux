@@ -17,7 +17,7 @@ until /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "${SA_PASSWORD}" -Q "SEL
 	sleep 1
 done
 
-if [ "$#" -ge 1 ] && [ ! -z "$1" ] && [ ! -f "$1" ]; then
+if [ "$#" -ge 1 ] && [ ! -z "$1" ] && [ -f "$1" ]; then
 	echo "Running init sql script: $1"
 	/opt/mssql-tools/bin/sqlcmd \
 		-S localhost -U SA -P "${SA_PASSWORD}" \
