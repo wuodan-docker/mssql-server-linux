@@ -2,10 +2,10 @@
 
 set -e
 
-if [ ! -z "${SA_PASSWORD_FILE}" ] && [ -e ${SA_PASSWORD_FILE} ];
+if [ -n "${SA_PASSWORD_FILE}" ] && [ -e ${SA_PASSWORD_FILE} ];
 then
 	echo "Setting SA_PASSWORD from ${SA_PASSWORD_FILE}"
-    export SA_PASSWORD="$(cat ${SA_PASSWORD_FILE})"
+    export SA_PASSWORD="$(cat ${SA_PASSWORD_FILE} | tr -d '\r')"
 fi
 
 /opt/mssql/bin/sqlservr &
@@ -17,11 +17,11 @@ until /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "${SA_PASSWORD}" -Q "SEL
 	sleep 1
 done
 
-if [ "$#" -ge 1 ] && [ ! -z "$1" ] && [ -f "$1" ]; then
-	echo "Running init sql script: $1"
+if [ "$#" -ge 1 ] && [ -n "${1}" ] && [ -f "${1}" ]; then
+	echo "Running init sql script: ${1}"
 	/opt/mssql-tools/bin/sqlcmd \
 		-S localhost -U SA -P "${SA_PASSWORD}" \
-		-i "$1"
+		-i "${1}"
 fi
 
 echo 'DONE'
